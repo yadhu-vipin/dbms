@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto; 
+           background-color:white; 
+           padding :20px; 
+           border-radius :8px; 
+           box-shadow :0 2px 10px rgba(0,0,0,.1);
+       }
+       h2 { text-align:center; color:#333; }
+       table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+       th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+       th { background-color: #007BFF; color: white; }
+       a { display:inline-block; margin-top :20px; padding :10px ; background-color:#007BFF;color:white;text-decoration:none;border-radius :5px;text-align:center;}
+       a:hover { background-color:#0056b3;}
+   </style>
+</head>
+<body>
+   <div class="container">
+       <h2>Marks for Exam ID: {{examId}}</h2>
+       <table>
+           <thead>
+               <tr>
+                   <th>Subject (Part 1)</th>
+                   <th>Subject (Part 2)</th>
+                   <th>Marks Awarded</th>
+               </tr>
+           </thead>
+           <tbody>
+               {{#each marks}}
+               <tr>
+                   <td>{{this.subject_first_part}}</td>
+                   <td>{{this.subject_second_part}}</td>
+                   <td>{{this.marks_awarded}}</td>
+               </tr>
+               {{/each}}
+           </tbody>
+       </table>
+
+       <a href="/">Go Back</a>
+   </div>
+</body>
+</html>

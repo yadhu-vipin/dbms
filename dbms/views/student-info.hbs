@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto; 
+            background-color: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        }
+        h2 { text-align:center; color:#333; }
+        p { font-size: 16px; line-height: 1.6; color: #555; }
+        strong { color: #007BFF; }
+        a { display:inline-block; margin-top :20px; padding :10px ; background-color:#007BFF;color:white;text-decoration:none;border-radius :5px;text-align:center;}
+        a:hover { background-color:#0056b3;}
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Information</h2>
+        <p><strong>Student ID:</strong> {{studentId}}</p>
+        <p><strong>Roll Number:</strong> {{rollNumber}}</p>
+        <p><strong>Name:</strong> {{firstName}} {{middleName}} {{lastName}}</p>
+        <p><strong>Gender:</strong> {{gender}}</p>
+        <p><strong>Date of Birth:</strong> {{dob}}</p>
+
+        <!-- Input for Exam ID -->
+        <h3>Check Marks</h3>
+        <form action="/student-marks" method="GET">
+            <input type="text" name="examId" placeholder="Enter Exam ID" required>
+            <button type="submit">View Marks</button>
+        </form>
+
+        <a href="/">Go Back</a>
+    </div>
+</body>
+</html>

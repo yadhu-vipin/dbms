@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examiner Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto; 
+            background-color: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        }
+        h2 { text-align:center; color:#333; }
+        button {
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            width: calc(100% - 20px);
+            margin-bottom: 15px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a { display:inline-block; margin-top :20px; padding :10px ; background-color:#007BFF;color:white;text-decoration:none;border-radius :5px;text-align:center;}
+        a:hover { background-color:#0056b3;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Examiner Dashboard</h2>
+        
+        <form action="/evaluation-list" method="GET">
+            <button type="submit">Evaluation</button>
+        </form>
+
+        <form action="/invigilation" method="GET">
+            <button type="submit">Invigilation</button>
+        </form>
+
+        <a href="/">Logout</a>
+    </div>
+</body>
+</html>

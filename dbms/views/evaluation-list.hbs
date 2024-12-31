@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Sheet Evaluations</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-semibold mb-6">Answer Sheets for Evaluation</h2>
+
+        {{#if evaluations.length}}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead>
+                    <tr>
+                        <th class="border-b px-4 py-2">Answer Sheet ID</th>
+                        <th class="border-b px-4 py-2">Student Name</th>
+                        <th class="border-b px-4 py-2">Exam ID</th>
+                        <th class="border-b px-4 py-2">Exam Date</th>
+                        <th class="border-b px-4 py-2">Exam Time</th>
+                        <th class="border-b px-4 py-2">Subject</th>
+                        <th class="border-b px-4 py-2">Marks Awarded</th>
+                        <th class="border-b px-4 py-2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each evaluations}}
+                    <tr class="hover:bg-gray-100">
+                        <td class="border-b px-4 py-2">{{this.answersheet_id}}</td>
+                        <td class="border-b px-4 py-2">{{this.first_name}} {{this.last_name}}</td>
+                        <td class="border-b px-4 py-2">{{this.exam_id}}</td>
+                        <td class="border-b px-4 py-2">{{this.exam_date}}</td>
+                        <td class="border-b px-4 py-2">{{this.exam_time}}</td>
+                        <td class="border-b px-4 py-2">{{this.subject_first_part}} - {{this.subject_second_part}}</td>
+
+                        <!-- Input field for marks awarded -->
+                        <td class="border-b px-4 py-2">
+                            <form action="/update-marks" method="POST" class="inline">
+                                <input type="hidden" name="answersheet_id" value="{{this.answersheet_id}}">
+                                <input type="number" name="marks_awarded" value="{{this.marks_awarded}}" min="0" required 
+                                       class="w-full p-1 border rounded focus:ring focus:ring-blue-500"/>
+                                <button type="submit" 
+                                        class="mt-1 bg-blue-600 text-white rounded-lg px-3 py-1 hover:bg-blue-700">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <p>No answer sheets available for evaluation.</p>
+        {{/if}}
+
+        <a href="/examiner-dashboard" class="mt-6 inline-block bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700">Back to Dashboard</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,409 @@
+-- Drop the existing Examiner table if it already exists
+DROP TABLE IF EXISTS Examiner;
+
+-- Recreate the Examiner Table
+CREATE TABLE Examiner (
+    examiner_id SERIAL PRIMARY KEY,
+    qualification VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE examiner_passwords (
+    examiner_id INT PRIMARY KEY REFERENCES Examiner(examiner_id),
+    password VARCHAR(255) NOT NULL UNIQUE
+);
+
+INSERT INTO examiner_passwords (examiner_id, password) VALUES
+(1, 'password123'),
+(2, 'securepass456'),
+(3, 'examiner789'),
+(4, 'mypassword101'),
+(5, 'testpass202');
+
+
+-- Creating the Student Table
+CREATE TABLE Student (
+    student_id SERIAL PRIMARY KEY,
+    roll_number VARCHAR(20) NOT NULL,
+    gender CHAR(1) NOT NULL,
+    dob DATE NOT NULL
+);
+
+-- Creating the Student_Name Table
+CREATE TABLE Student_Name (
+    student_id INT PRIMARY KEY REFERENCES Student(student_id),
+    first_name VARCHAR(50) NOT NULL,
+    middle_name VARCHAR(50),
+    last_name VARCHAR(50) NOT NULL
+);
+
+-- Creating the School Table
+CREATE TABLE School (
+    school_id SERIAL PRIMARY KEY,
+    school_name VARCHAR(50) NOT NULL,
+    district VARCHAR(50) NOT NULL,
+    state VARCHAR(50) NOT NULL
+);
+
+-- Creating the School_Principal Table
+CREATE TABLE School_Principal (
+    school_id INT PRIMARY KEY REFERENCES School(school_id),
+    principal_name VARCHAR(50) NOT NULL
+);
+
+-- Creating the Exam Table
+CREATE TABLE Exam (
+    exam_id SERIAL PRIMARY KEY,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    total_marks INT NOT NULL
+);
+
+-- Creating the Exam_Subject Table
+CREATE TABLE Exam_Subject (
+    exam_id INT PRIMARY KEY REFERENCES Exam(exam_id),
+    subject_first_part VARCHAR(50) NOT NULL,
+    subject_second_part VARCHAR(50) NOT NULL
+);
+
+-- Creating the Answer_Sheet Table (Corrected to use examiner_id instead of school_id)
+CREATE TABLE Answer_Sheet (
+    answersheet_id SERIAL PRIMARY KEY,
+    exam_id INT NOT NULL REFERENCES Exam(exam_id),
+    examiner_id INT NOT NULL REFERENCES Examiner(examiner_id), -- Corrected to examiner_id
+    student_id INT NOT NULL REFERENCES Student(student_id),
+    marks_awarded INT NOT NULL
+);
+
+-- Creating the Examiner_Name Table
+CREATE TABLE Examiner_Name (
+    examiner_id INT PRIMARY KEY REFERENCES Examiner(examiner_id),
+    examiner_first_name VARCHAR(50) NOT NULL,
+    examiner_middle_name VARCHAR(50),
+    examiner_last_name VARCHAR(50) NOT NULL
+);
+
+-- Creating the Section Table
+CREATE TABLE Section (
+    section_id SERIAL PRIMARY KEY,
+    grade VARCHAR(10) NOT NULL,
+    school_id INT NOT NULL REFERENCES School(school_id)
+);
+
+-- Creating the Supervises Table
+CREATE TABLE Supervises (
+    supervisor_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    phone VARCHAR(15) NOT NULL
+);
+
+-- Creating the Assigned Table
+CREATE TABLE Assigned (
+    assignment_id SERIAL PRIMARY KEY,
+    examiner_id INT NOT NULL REFERENCES Examiner(examiner_id),
+    assignment_date DATE NOT NULL
+);
+
+-- Creating the Participates Table
+CREATE TABLE Participates (
+    examiner_id INT NOT NULL REFERENCES Examiner(examiner_id),
+    exam_id INT NOT NULL REFERENCES Exam(exam_id),
+    PRIMARY KEY (examiner_id, exam_id)
+);
+
+-- Creating the Evaluation Table
+CREATE TABLE Evaluation (
+    examiner_id INT NOT NULL REFERENCES Examiner(examiner_id),
+    answersheet_id INT NOT NULL REFERENCES Answer_Sheet(answersheet_id),
+    PRIMARY KEY (examiner_id, answersheet_id)
+);
+
+-- Creating the Conducts Table
+CREATE TABLE Conducts (
+    exam_id INT NOT NULL REFERENCES Exam(exam_id),
+    school_id INT NOT NULL REFERENCES School(school_id),
+    PRIMARY KEY (exam_id, school_id)
+);
+
+-- Creating the Enrolls Table
+CREATE TABLE Enrolls (
+    school_id INT NOT NULL REFERENCES School(school_id),
+    student_id INT NOT NULL REFERENCES Student(student_id),
+    name VARCHAR(50) NOT NULL,
+    roll_number VARCHAR(20) NOT NULL,
+    dob DATE NOT NULL,
+    PRIMARY KEY (school_id, student_id)
+);
+
+-- Creating the Invigilation_Assignment Table
+
+
+-- Create the Invigilation_Assignment Table with examiner_id
+CREATE TABLE Invigilation_Assignment (
+    assignment_id SERIAL PRIMARY KEY,
+    exam_id INT NOT NULL REFERENCES Exam(exam_id),
+    examiner_id INT NOT NULL REFERENCES Examiner(examiner_id),
+    assignment_date DATE NOT NULL
+);
+
+
+-- Creating the Creates Table
+CREATE TABLE Creates (
+    exam_id INT NOT NULL REFERENCES Exam(exam_id),
+    school_id INT NOT NULL REFERENCES School(school_id),
+    student_id INT NOT NULL REFERENCES Student(student_id),
+    assignment_id INT NOT NULL REFERENCES Assigned(assignment_id),
+    PRIMARY KEY (exam_id, school_id, student_id, assignment_id)
+);
+
+-- Creating the Student_Section Table (New Table for Student and Section relationship)
+CREATE TABLE Student_Section (
+    student_id INT NOT NULL REFERENCES Student(student_id),
+    grade VARCHAR(10) NOT NULL,
+    section_id INT NOT NULL REFERENCES Section(section_id), -- Assuming section_id is present in Section table
+    PRIMARY KEY (student_id, section_id)
+);
+
+-- Creating the Employs Table
+CREATE TABLE Employs (
+    examiner_id INT NOT NULL REFERENCES Examiner(examiner_id),
+    school_id INT NOT NULL REFERENCES School(school_id),
+    PRIMARY KEY (examiner_id, school_id)
+);
+
+INSERT INTO Invigilation_Assignment (exam_id, examiner_id, assignment_date) VALUES
+(1, 1, '2024-01-10'),
+(2, 2, '2024-01-11'),
+(3, 3, '2024-01-12'),
+(4, 4, '2024-01-13'),
+(5, 5, '2024-01-14');
+
+-- Inserting Data into the Student Table
+INSERT INTO Student (roll_number, gender, dob) VALUES
+('1001', 'M', '2005-05-15'),
+('1002', 'F', '2006-03-20'),
+('1003', 'M', '2005-10-11'),
+('1004', 'F', '2006-07-09'),
+('1005', 'M', '2005-12-25'),
+('1006', 'F', '2006-01-15'),
+('1007', 'M', '2005-11-11'),
+('1008', 'F', '2006-08-20'),
+('1009', 'M', '2005-09-05'),
+('1010', 'F', '2006-02-14'),
+('1011', 'M', '2005-04-18'),
+('1012', 'F', '2006-06-12'),
+('1013', 'M', '2005-07-25'),
+('1014', 'F', '2006-10-30'),
+('1015', 'M', '2005-03-05'),
+('1016', 'F', '2006-09-18'),
+('1017', 'M', '2005-01-22'),
+('1018', 'F', '2006-11-15'),
+('1019', 'M', '2005-08-07'),
+('1020', 'F', '2006-12-19');
+
+-- Inserting Data into the Student_Name Table
+INSERT INTO Student_Name (student_id, first_name, middle_name, last_name) VALUES
+(1, 'Aryan', NULL, 'Sharma'),
+(2, 'Priya', NULL, 'Gupta'),
+(3, 'Rahul', NULL, 'Mehta'),
+(4, 'Neha', NULL, 'Verma'),
+(5, 'Kunal', NULL, 'Singh'),
+(6, 'Anjali', NULL, 'Iyer'),
+(7, 'Rohan', NULL, 'Pillai'),
+(8, 'Sneha', NULL, 'Chopra'),
+(9, 'Aarav', NULL, 'Das'),
+(10, 'Pooja', NULL, 'Reddy'),
+(11, 'Amit', NULL, 'Shah'),
+(12, 'Ishita', NULL, 'Rao'),
+(13, 'Siddharth', NULL, 'Nair'),
+(14, 'Meera', NULL, 'Kumar'),
+(15, 'Vikram', NULL, 'Joshi'),
+(16, 'Naina', NULL, 'Patel'),
+(17, 'Karan', NULL, 'Desai'),
+(18, 'Tanya', NULL, 'Chawla'),
+(19, 'Kabir', NULL, 'Malhotra'),
+(20, 'Isha', NULL, 'Jain');
+
+-- Inserting Data into the School Table
+INSERT INTO School (school_id,school_name, district, state) VALUES
+(1,'Kendriya Vidyalaya', 'Central', 'Delhi'),
+(2,'DAV Public School', 'Pune', 'Maharashtra'),
+(3,'National Public School', 'Bangalore', 'Karnataka'),
+(4,'St. Xavier', 'Chennai', 'Tamil Nadu'),
+(5,'Holy Angels', 'Ernakulam', 'Kerala'),
+(6,'Delhi Public School', 'Noida', 'Uttar Pradesh'),
+(7,'Loyola School', 'Patna', 'Bihar'),
+(8,'Modern School', 'Hyderabad', 'Telangana'),
+(9,'Amity International', 'Gurgaon', 'Haryana'),
+(10,'Christ School', 'Kolkata', 'West Bengal'),
+(11,'Ryan International', 'Mumbai', 'Maharashtra'),
+(12,'Springdale School', 'Jaipur', 'Rajasthan'),
+(13,'Cambridge School', 'Lucknow', 'Uttar Pradesh'),
+(14,'Loreto Convent', 'Shimla', 'Himachal Pradesh'),
+(15,'Bishop Cotton School', 'Darjeeling', 'West Bengal'),
+(16,'St. Pauls School', 'Dehradun', 'Uttarakhand'),
+(17,'Greenwood High', 'Bangalore', 'Karnataka'),
+(18,'Silver Oaks', 'Ahmedabad', 'Gujarat'),
+(19,'Oakridge International', 'Chandigarh', 'Punjab'),
+(20,'The Heritage School', 'Pune', 'Maharashtra');
+
+-- Inserting Data into the School_Principal Table
+INSERT INTO School_Principal (school_id, principal_name) VALUES
+(1, 'Mr. Sharma'),
+(2, 'Ms. Gupta'),
+(3, 'Mr. Verma'),
+(4, 'Ms. Iyer'),
+(5, 'Mr. Pillai'),
+(6, 'Ms. Chopra'),
+(7, 'Mr. Reddy'),
+(8, 'Ms. Shah'),
+(9, 'Mr. Rao'),
+(10, 'Ms. Nair'),
+(11, 'Mr. Kumar'),
+(12, 'Ms. Joshi'),
+(13, 'Mr. Patel'),
+(14, 'Ms. Desai'),
+(15, 'Mr. Chawla'),
+(16, 'Ms. Malhotra'),
+(17, 'Mr. Jain'),
+(18, 'Ms. Sharma'),
+(19, 'Mr. Gupta'),
+(20, 'Ms. Mehta');
+
+-- Inserting Data into the Examiner Table
+INSERT INTO Examiner (examiner_id,qualification) VALUES
+(1,'M.Sc in Physics'),
+(2,'Ph.D. in Mathematics'),
+(3,'M.A in English'),
+(4,'Ph.D. in Chemistry'),
+(5,'M.Tech in Computer Science'),
+(6,'B.Ed in History'),
+(7,'M.Sc in Biology'),
+(8,'Ph.D. in Economics'),
+(9,'M.Com in Accountancy'),
+(10,'Ph.D. in Geography');
+
+-- Inserting Data into the Examiner_Name Table
+INSERT INTO Examiner_Name (examiner_id, examiner_first_name, examiner_middle_name, examiner_last_name) VALUES
+(1, 'Ramesh', NULL, 'Kumar'),
+(2, 'Suman', NULL, 'Verma'),
+(3, 'Arun', NULL, 'Shah'),
+(4, 'Kavita', NULL, 'Singh'),
+(5, 'Vikas', NULL, 'Nair'),
+(6, 'Asha', NULL, 'Mehta'),
+(7, 'Rajesh', NULL, 'Pillai'),
+(8, 'Pooja', NULL, 'Das'),
+(9, 'Anil', NULL, 'Chopra'),
+(10, 'Seema', NULL, 'Joshi');
+
+-- Inserting Data into the Exam Table
+INSERT INTO Exam (exam_id,date, time, total_marks) VALUES
+(1,'2024-01-15', '09:00:00', 100),
+(2,'2024-01-16', '11:00:00', 100),
+(3,'2024-01-17', '10:30:00', 100),
+(4,'2024-01-18', '09:30:00', 100),
+(5,'2024-01-19', '08:00:00', 100);
+
+-- Inserting Data into the Exam_Subject Table
+INSERT INTO Exam_Subject (exam_id, subject_first_part, subject_second_part) VALUES
+(1, 'Mathematics', 'Algebra'),
+(2, 'Science', 'Physics'),
+(3, 'Social Science', 'History'),
+(4, 'English', 'Literature'),
+(5, 'Hindi', 'Grammar');
+
+-- Inserting Data into the Section Table
+INSERT INTO Section (grade, school_id) VALUES
+('10th', 1),
+('9th', 2),
+('10th', 3),
+('8th', 4),
+('12th', 5);
+
+-- Inserting Data into the Answer_Sheet Table
+INSERT INTO Answer_Sheet (exam_id, examiner_id, student_id, marks_awarded) VALUES
+(1, 1, 1, 85),
+(2, 2, 2, 78),
+(3, 3, 3, 88),
+(4, 4, 4, 92),
+(5, 5, 5, 95);
+
+-- Inserting Data into the Supervises Table
+INSERT INTO Supervises (name, email, phone) VALUES
+('Ashok Sharma', 'ashok.sharma@example.com', '9876543210'),
+('Neha Gupta', 'neha.gupta@example.com', '8765432109'),
+('Rahul Verma', 'rahul.verma@example.com', '7654321098'),
+('Kiran Das', 'kiran.das@example.com', '6543210987'),
+('Meena Iyer', 'meena.iyer@example.com', '5432109876');
+
+-- Inserting Data into the Assigned Table
+INSERT INTO Assigned (examiner_id, assignment_date) VALUES
+(1, '2024-01-10'),
+(2, '2024-01-11'),
+(3, '2024-01-12'),
+(4, '2024-01-13'),
+(5, '2024-01-14');
+
+-- Inserting Data into the Participates Table
+INSERT INTO Participates (examiner_id, exam_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+
+-- Inserting Data into the Evaluation Table
+INSERT INTO Evaluation (examiner_id, answersheet_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+
+-- Inserting Data into the Conducts Table
+INSERT INTO Conducts (exam_id, school_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+
+-- Inserting Data into the Enrolls Table
+INSERT INTO Enrolls (school_id, student_id, name, roll_number, dob) VALUES
+(1, 1, 'Aryan Sharma', '1001', '2005-05-15'),
+(2, 2, 'Priya Gupta', '1002', '2006-03-20'),
+(3, 3, 'Rahul Mehta', '1003', '2005-10-11'),
+(4, 4, 'Neha Verma', '1004', '2006-07-09'),
+(5, 5, 'Kunal Singh', '1005', '2005-12-25');
+
+-- Inserting Data into the Invigilation_Assignment Table
+INSERT INTO Invigilation_Assignment (assignment_date) VALUES
+('2024-01-05'),
+('2024-01-06'),
+('2024-01-07'),
+('2024-01-08'),
+('2024-01-09');
+
+-- Inserting Data into the Creates Table
+INSERT INTO Creates (exam_id, school_id, student_id, assignment_id) VALUES
+(1, 1, 1, 1),
+(2, 2, 2, 2),
+(3, 3, 3, 3),
+(4, 4, 4, 4),
+(5, 5, 5, 5);
+
+-- Inserting Data into the Student_Section Table
+INSERT INTO Student_Section (student_id, grade, section_id) VALUES
+(1, '10th', 1),
+(2, '9th', 2),
+(3, '10th', 3),
+(4, '8th', 4),
+(5, '12th', 5);
+
+-- Inserting Data into the Employs Table
+INSERT INTO Employs (examiner_id, school_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
